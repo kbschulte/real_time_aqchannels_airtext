@@ -15,17 +15,24 @@ load("/Users/kaylaschulte/Research/Rdas/airtext_data.rda")
 load("/Users/kaylaschulte/Research/Rdas/GLA_2016.rda")
 load("/Users/kaylaschulte/Research/Rdas/demographic_data.rda")
 
-#Linear model for Airtext subscription by postcode
+#Save 
+save(airtext_lm_rob, airtext_lm, airtext_no2_postcode_dem2, file = "/Users/kaylaschulte/Research/Rdas/airtext_figs.rda")
+
+#Estimate linear model for Airtext subscription by postcode
 
 nrow(airtext_GLA2016_no2_postcode)
 
 airtext_lm <- lm(total ~ mean_NO2 + usual_res + mean_NO2*usual_res + IMD, data=airtext_no2_postcode_dem2)
 summary(airtext_lm)
 
+#Examine for heteroskedacity
+
 par(mfrow=c(2,2)) # init 4 charts in 1 panel
 plot(airtext_lm)
 
 lmtest::bptest(airtext_lm)
+
+#Estimate linear model with robust standard errors
 
 airtext_lm_rob <- lmrob(total ~ mean_NO2 + usual_res + mean_NO2*usual_res + IMD, data=airtext_no2_postcode_dem2)
 summary(airtext_lm_rob)
